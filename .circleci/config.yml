@@ -3,13 +3,13 @@ jobs:
   build:
     docker:
       - image: r-base:3.5.0
-    working_directory: /repo
+    working_directory: ~/repo
     steps:
       - checkout
       - run:
           name: Change permissions on /repo folder
           command: |
-            chmod 777 /repo
+            chmod 777 ~/repo
       - run:
           name: Install rsconnect
           command: |
@@ -17,16 +17,14 @@ jobs:
       - save_cache:
           key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - /repo
+            - ~/repo
   deploy:
-    working_directory: /repo
-    machine:
-      enabled: true
+    working_directory: ~/repo
     steps:
       - run:
-          name: Change permissions on /repo folder
+          name: Change permissions on ~/repo folder
           command: |
-            chmod 777 /repo
+            chmod 777 ~/repo
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
