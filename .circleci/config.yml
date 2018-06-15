@@ -3,9 +3,13 @@ jobs:
   build:
     docker:
       - image: r-base:3.5.0
-    working_directory: /repo
+    working_directory: ~/tmp
     steps:
       - checkout
+      - run:
+          name: Change permissions on ~/tmp folder
+          command: |
+            chmod 777 ~/tmp
       - run:
           name: Install rsconnect
           command: |
@@ -13,9 +17,9 @@ jobs:
       - save_cache:
           key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - /repo
+            - ~/tmp
   deploy:
-    working_directory: /repo
+    working_directory: ~/tmp
     machine:
       enabled: true
     steps:
