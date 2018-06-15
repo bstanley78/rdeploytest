@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: r-base:3.5.0
-    working_directory: ~/repo
+    working_directory: /repo
     steps:
       - checkout
       - run:
@@ -13,9 +13,9 @@ jobs:
       - save_cache:
           key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - ~/repo
+            - /repo
   deploy:
-    working_directory: ~/repo
+    working_directory: /repo
     machine:
       enabled: true
     steps:
