@@ -14,6 +14,17 @@ jobs:
           name: Install rsconnect
           command: |
             Rscript -e "install.packages('rsconnect')"
+      - save_cache:
+          key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/tmp
+  deploy:
+    working_directory: ~/tmp
+    machine:
+      enabled: true
+    steps:
+      - restore_cache:
+          key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Deploy to Shinyapps.io
           command: |
@@ -28,6 +39,9 @@ workflows:
   build-and-deploy:
     jobs:
       - build
+      - deploy:
+          requires:
+            - build
           filters:
             branches:
               only: master
