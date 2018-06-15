@@ -1,0 +1,43 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: r-base:3.5.0
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Install rsconnect
+          command: |
+            Rscript -e "install.packages('rsconnect')"
+      - save_cache:
+          key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/repo
+  deploy:
+    working_directory: ~/repo
+    machine:
+      enabled: true
+    steps:
+      - restore_cache:
+          key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Deploy to Shinyapps.io
+          command: |
+            Rscript ./deploy.R
+          environment:
+            SHINY_APPS_USERNAME: $SHINY_APPS_USERNAME
+            SHINY_APPS_TOKEN: $SHINY_APPS_TOKEN
+            SHINY_APPS_SECRET: SHINY_APPS_SECRET
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

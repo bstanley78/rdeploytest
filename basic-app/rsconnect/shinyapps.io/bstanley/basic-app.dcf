@@ -1,0 +1,10 @@
+name: basic-app
+title:
+username:
+account: bstanley
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 361678
+bundleId: 1432101
+url: https://bstanley.shinyapps.io/basic-app/
+when: 1529093392.59863
