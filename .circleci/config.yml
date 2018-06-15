@@ -19,14 +19,10 @@ jobs:
           paths:
             - /repo
   deploy:
-    working_directory: /repo
+    working_directory: ~/repo
     machine:
       enabled: true
     steps:
-      - run:
-          name: Change permissions on /repo folder
-          command: |
-            chmod 777 /repo
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
