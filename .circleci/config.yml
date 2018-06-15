@@ -7,9 +7,24 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Change permissions on /repo folder
+          command: |
+            chmod 777 /repo
+      - run:
           name: Install rsconnect
           command: |
             Rscript -e "install.packages('rsconnect')"
+      - save_cache:
+          key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - /repo
+  deploy:
+    working_directory: ~/repo
+    machine:
+      enabled: true
+    steps:
+      - restore_cache:
+          key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Deploy to Shinyapps.io
           command: |
@@ -24,6 +39,9 @@ workflows:
   build-and-deploy:
     jobs:
       - build
+      - deploy:
+          requires:
+            - build
           filters:
             branches:
               only: master
