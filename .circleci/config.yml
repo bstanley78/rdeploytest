@@ -2,37 +2,29 @@ version: 2
 jobs:
   build:
     docker:
-      - image: rocker/shiny
-    # working_directory: /repo
+      - image: circleci/node:latest
+    working_directory: ~/repo
     steps:
-      # - run:
-      #     name: Change permissions on /repo folder
-      #     command: |
-      #       chmod 777 /repo
+      - checkout
+      - run:
+          name: Install R prerequisites
+          command: |
+            apt update && apt install -y r-base
       - run:
           name: Install rsconnect
           command: |
             Rscript -e "install.packages('rsconnect')"
-      # - save_cache:
-      #     key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-      #     paths:
-      #       - /repo
+      - save_cache:
+          key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/repo
   deploy:
     working_directory: ~/repo
     machine:
       enabled: true
     steps:
-      - checkout
-      # - run:
-      #     name: Change permissions on ~/repo folder
-      #     command: |
-      #       chmod 777 /repo
-      # - restore_cache:
-      #     key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-      - run:
-          name: get bearings
-          command: |
-            pwd && ls -l
+      - restore_cache:
+          key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Deploy to Shinyapps.io
           command: |
