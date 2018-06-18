@@ -1,4 +1,3 @@
-install.packages('rsconnect')
 library(rsconnect)
 
 shiny.apps.username <- Sys.getenv("SHINY_APPS_USERNAME")   
