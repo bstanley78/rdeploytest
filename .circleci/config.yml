@@ -13,7 +13,7 @@ jobs:
       - run:
           name: Install rsconnect
           command: |
-            Rscript -e "install.packages('rsconnect')"
+            sudo Rscript -e "install.packages('rsconnect')"
       - save_cache:
           key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
           paths:
@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Deploy to Shinyapps.io
           command: |
-            Rscript ./deploy.R
+            sudo Rscript ./deploy.R
           environment:
             SHINY_APPS_USERNAME: $SHINY_APPS_USERNAME
             SHINY_APPS_TOKEN: $SHINY_APPS_TOKEN
