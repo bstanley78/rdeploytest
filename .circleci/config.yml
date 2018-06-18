@@ -2,14 +2,14 @@ version: 2
 jobs:
   build:
     docker:
-      - image: r-base:3.5.0
+      - image: rocker/shiny
     working_directory: ~/repo
     steps:
       - checkout
-      - run:
-          name: Change permissions on /repo folder
-          command: |
-            chmod 777 ~/repo
+      # - run:
+      #     name: Change permissions on /repo folder
+      #     command: |
+      #       chmod 777 ~/repo
       - run:
           name: Install rsconnect
           command: |
@@ -20,11 +20,13 @@ jobs:
             - ~/repo
   deploy:
     working_directory: ~/repo
+    machine:
+      enabled: true
     steps:
-      - run:
-          name: Change permissions on ~/repo folder
-          command: |
-            chmod 777 ~/repo
+      # - run:
+      #     name: Change permissions on ~/repo folder
+      #     command: |
+      #       chmod 777 /repo
       - restore_cache:
           key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
