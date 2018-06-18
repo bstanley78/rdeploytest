@@ -30,6 +30,10 @@ jobs:
       # - restore_cache:
       #     key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
+          name: get bearings
+          command: |
+            pwd && ls -l
+      - run:
           name: Deploy to Shinyapps.io
           command: |
             Rscript ./deploy.R
