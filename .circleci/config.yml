@@ -3,32 +3,32 @@ jobs:
   build:
     docker:
       - image: rocker/shiny
-    working_directory: /repo
+    # working_directory: /repo
     steps:
-      - checkout
-      - run:
-          name: Change permissions on /repo folder
-          command: |
-            chmod 777 /repo
+      # - run:
+      #     name: Change permissions on /repo folder
+      #     command: |
+      #       chmod 777 /repo
       - run:
           name: Install rsconnect
           command: |
             Rscript -e "install.packages('rsconnect')"
-      - save_cache:
-          key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-          paths:
-            - /repo
+      # - save_cache:
+      #     key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+      #     paths:
+      #       - /repo
   deploy:
-    working_directory: /repo
+    working_directory: ~/repo
     machine:
       enabled: true
     steps:
+      - checkout
       # - run:
       #     name: Change permissions on ~/repo folder
       #     command: |
       #       chmod 777 /repo
-      - restore_cache:
-          key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+      # - restore_cache:
+      #     key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Deploy to Shinyapps.io
           command: |
