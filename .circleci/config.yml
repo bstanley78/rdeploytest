@@ -9,7 +9,7 @@ jobs:
       - run:
           name: Install R prerequisites
           command: |
-            sudo apt update && sudo apt install -y r-base
+            sudo add-apt-repository 'deb [arch=amd64,i386] https://cran.rstudio.com/bin/linux/ubuntu xenial/' && sudo apt-get update && ssudo apt-get install -y r-base
       - run:
           name: Install rsconnect
           command: |
