@@ -14,17 +14,6 @@ jobs:
           name: Install rsconnect
           command: |
             sudo Rscript -e "install.packages('rsconnect', repos = 'http://cran.us.r-project.org')"
-      - save_cache:
-          key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-          paths:
-            - ~/repo
-  deploy:
-    working_directory: ~/repo
-    machine:
-      enabled: true
-    steps:
-      - restore_cache:
-          key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Deploy to Shinyapps.io
           command: |
@@ -33,15 +22,34 @@ jobs:
             SHINY_APPS_USERNAME: $SHINY_APPS_USERNAME
             SHINY_APPS_TOKEN: $SHINY_APPS_TOKEN
             SHINY_APPS_SECRET: SHINY_APPS_SECRET
+      # - save_cache:
+      #     key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+      #     paths:
+      #       - ~/repo
+  # deploy:
+  #   working_directory: ~/repo
+  #   machine:
+  #     enabled: true
+  #   steps:
+  #     - restore_cache:
+  #         key: repo-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+  #     - run:
+  #         name: Deploy to Shinyapps.io
+  #         command: |
+  #           sudo Rscript ./deploy.R
+  #         environment:
+  #           SHINY_APPS_USERNAME: $SHINY_APPS_USERNAME
+  #           SHINY_APPS_TOKEN: $SHINY_APPS_TOKEN
+  #           SHINY_APPS_SECRET: SHINY_APPS_SECRET
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - build
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
+      # - deploy:
+      #     requires:
+      #       - build
+      #     filters:
+      #       branches:
+      #         only: master
